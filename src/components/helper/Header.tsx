@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import {API_URLS, CONST} from "../../constants/constants.ts";
+import { API_URLS, CONST } from "../../constants/constants.ts";
 
 const HeaderContainer = styled.header`
     display: flex;
@@ -60,17 +60,28 @@ const SignUpButton = styled(Button)`
 
 const Header: React.FC = () => {
     const navigate = useNavigate();
+    const currentPath = window.location.pathname;
 
     const handleLogoClick = () => {
-        navigate(CONST.BASE_NET);
+        if (currentPath !== CONST.BASE_NET) {
+            navigate(CONST.BASE_NET);
+        }
     };
 
     const handleLoginClick = () => {
-        navigate(API_URLS.LOGIN);
+        if (currentPath === `/${API_URLS.LOGIN}`) {
+            window.location.reload(); // Перезагрузка страницы, если уже на странице логина
+        } else {
+            navigate(`/${API_URLS.LOGIN}`);
+        }
     };
 
     const handleSignUpClick = () => {
-        navigate(API_URLS.SIGNUP);
+        if (currentPath === `/${API_URLS.SIGNUP}`) {
+            window.location.reload(); // Перезагрузка страницы, если уже на странице регистрации
+        } else {
+            navigate(`/${API_URLS.SIGNUP}`);
+        }
     };
 
     return (
