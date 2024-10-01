@@ -111,6 +111,9 @@ const SignUpPage: React.FC = () => {
                     <Label htmlFor="password">Password:</Label>
                     <Input id="password" type="password" placeholder="Your password" required />
 
+                    <Label htmlFor="confirmPassword">Repeat Password:</Label>
+                    <Input id="confirmPassword" type="password" placeholder="Repeat your password" required />
+
                     <SignUpButton type="submit">Create My Account</SignUpButton>
                 </Form>
             </FormContainer>

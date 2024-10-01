@@ -3,7 +3,8 @@ export const API_URLS = {
     POST: 'api/posts',
     RECENT_POSTS: 'api/posts/recent',
     LOGIN: 'api/auth/login',
-    SIGNUP: 'api/auth/signup'
+    SIGNUP: 'api/auth/signup',
+    PROFILE: 'api/profile'
 } as const;
 
 export const CONST = {
