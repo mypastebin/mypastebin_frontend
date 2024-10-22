@@ -166,12 +166,19 @@ const MainPage: React.FC = () => {
             expirationDate
         };
 
+        const token = localStorage.getItem('token');
+        if (token) {
+            console.log('Authorization Header:', `Bearer ${JSON.parse(token)}`);
+        } else {
+            console.log('No Authorization Token Found');
+        }
+
         console.log('Submitting Post Data:', pasteData);
 
         try {
             const createdPost = await createPost(pasteData);
             console.log('Created Post:', createdPost);
-            navigate(`/api/posts/${createdPost.hash}`); // Переход к новому посту
+            navigate(`/api/posts/${createdPost.hash}`);
         } catch (error) {
             console.error('Error creating post:', error);
         }

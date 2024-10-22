@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { API_URLS, CONST } from "../../constants/constants.ts";
+import { FaUserCircle } from 'react-icons/fa';
 
 const HeaderContainer = styled.header`
     display: flex;
@@ -58,30 +59,65 @@ const SignUpButton = styled(Button)`
     }
 `;
 
+const UserIcon = styled(FaUserCircle)`
+    color: #ECF0F1;
+    font-size: 30px;
+    cursor: pointer;
+    margin-left: 20px;
+`;
+
+const DropdownMenu = styled.div`
+    position: absolute;
+    top: 50px;
+    right: 20px;
+    background-color: #2C3E50;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+`;
+
+const DropdownItem = styled.div`
+    padding: 10px;
+    color: #ECF0F1;
+    cursor: pointer;
+    &:hover {
+        background-color: #34495E;
+    }
+`;
+
 const Header: React.FC = () => {
     const navigate = useNavigate();
-    const currentPath = window.location.pathname;
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // Состояние авторизации
+    const [showDropdown, setShowDropdown] = useState(false); // Для управления выпадающим меню
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            setIsLoggedIn(true);
+        }
+    }, []);
 
     const handleLogoClick = () => {
-        if (currentPath !== CONST.BASE_NET) {
-            navigate(CONST.BASE_NET);
-        }
+        navigate(CONST.BASE_NET);
     };
 
     const handleLoginClick = () => {
-        if (currentPath === `/${API_URLS.LOGIN}`) {
-            window.location.reload(); // Перезагрузка страницы, если уже на странице логина
-        } else {
-            navigate(`/${API_URLS.LOGIN}`);
-        }
+        navigate(`/${API_URLS.LOGIN}`);
     };
 
     const handleSignUpClick = () => {
-        if (currentPath === `/${API_URLS.SIGNUP}`) {
-            window.location.reload(); // Перезагрузка страницы, если уже на странице регистрации
-        } else {
-            navigate(`/${API_URLS.SIGNUP}`);
-        }
+        navigate(`/${API_URLS.SIGNUP}`);
+    };
+
+    const handleLogout = () => {
+        // Удаляем токен из localStorage и перенаправляем на страницу логина
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+        navigate(`/${API_URLS.LOGIN}`);
+    };
+
+    const handleProfileClick = () => {
+        navigate(`/${API_URLS.PROFILE}`);
     };
 
     return (
@@ -90,8 +126,22 @@ const Header: React.FC = () => {
                 MyPasteBin
             </LogoButton>
             <RightSection>
-                <Button onClick={handleLoginClick}>Login</Button>
-                <SignUpButton onClick={handleSignUpClick}>Sign Up</SignUpButton>
+                {!isLoggedIn ? (
+                    <>
+                        <Button onClick={handleLoginClick}>Login</Button>
+                        <SignUpButton onClick={handleSignUpClick}>Sign Up</SignUpButton>
+                    </>
+                ) : (
+                    <>
+                        <UserIcon onClick={() => setShowDropdown(!showDropdown)} />
+                        {showDropdown && (
+                            <DropdownMenu>
+                                <DropdownItem onClick={handleProfileClick}>Profile</DropdownItem>
+                                <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
+                            </DropdownMenu>
+                        )}
+                    </>
+                )}
             </RightSection>
         </HeaderContainer>
     );

@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Header from "./helper/Header.tsx";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../utils/userUtils.ts";
+import { API_URLS } from "../constants/constants.ts";
 
 const LoginPageContainer = styled.div`
     display: flex;
@@ -42,12 +45,12 @@ const SocialButton = styled.button`
 
 const FormContainer = styled.div`
     background-color: #2C3E50;
-    padding: 3vh 3vw;  
+    padding: 3vh 3vw;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    height: 24vh;  
+    height: 24vh;
     width: 50%;
-    max-width: 30vh; 
+    max-width: 30vh;
 `;
 
 const Form = styled.form`
@@ -63,7 +66,7 @@ const Label = styled.label`
 `;
 
 const Input = styled.input`
-    padding: 1.2vh;  
+    padding: 1.2vh;
     margin-bottom: 1.5vh;
     border: 1px solid #34495E;
     border-radius: 5px;
@@ -78,7 +81,7 @@ const Input = styled.input`
 `;
 
 const LoginButton = styled.button`
-    padding: 1.2vh;  
+    padding: 1.2vh;
     background-color: #3498DB;
     color: white;
     border: none;
@@ -91,7 +94,42 @@ const LoginButton = styled.button`
     }
 `;
 
+const ErrorText = styled.p`
+    color: red;
+    margin-top: 2vh;
+`;
+
 const LoginPage: React.FC = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError('');
+
+        try {
+            const response = await loginUser({ username, password });
+
+            console.log('Login response:', response);
+
+            localStorage.setItem('token', JSON.stringify(response.token));
+
+            alert('Login successful! Redirecting to your profile.');
+            navigate(`/${API_URLS.PROFILE}`);
+        } catch (error: unknown) {
+            console.error(error);
+
+            if (error instanceof Error) {
+                setError(error.message);
+            } else {
+                setError('Error occurred during login. Please try again.');
+            }
+        }
+    };
+
+
     return (
         <LoginPageContainer>
             <Header />
@@ -102,12 +140,28 @@ const LoginPage: React.FC = () => {
             </SocialLoginContainer>
 
             <FormContainer>
-                <Form>
+                <Form onSubmit={handleLogin}>
                     <Label htmlFor="username">Username:</Label>
-                    <Input id="username" type="text" placeholder="Your username" required />
+                    <Input
+                        id="username"
+                        type="text"
+                        placeholder="Your username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                    />
 
                     <Label htmlFor="password">Password:</Label>
-                    <Input id="password" type="password" placeholder="Your password" required />
+                    <Input
+                        id="password"
+                        type="password"
+                        placeholder="Your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+
+                    {error && <ErrorText>{error}</ErrorText>}
 
                     <LoginButton type="submit">Login</LoginButton>
                 </Form>

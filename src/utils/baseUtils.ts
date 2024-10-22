@@ -41,6 +41,15 @@ export async function putRequest<T>(url: string, body: any): Promise<T> {
     return makeRequest<T>(url, 'PUT', body);
 }
 
-export async function getRequest<T>(url: string, responseType?: string): Promise<T> {
-    return makeRequest<T>(url, 'GET', undefined, responseType);
+export async function getRequest<T>(url: string, headers?: HeadersInit): Promise<T> {
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: headers ? headers : {},
+    });
+
+    if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    }
+
+    return await response.json();
 }

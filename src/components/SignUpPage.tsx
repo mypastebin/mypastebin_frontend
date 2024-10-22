@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import Header from "./helper/Header.tsx";
+import Header from './helper/Header.tsx';
+import { registerUser } from '../utils/userUtils';
+import {API_URLS} from "../constants/constants.ts"; // Импортируем функцию регистрации
 
 const SignUpPageContainer = styled.div`
     display: flex;
@@ -90,7 +93,37 @@ const SignUpButton = styled.button`
     }
 `;
 
+const ErrorText = styled.p`
+    color: red;
+    margin-top: 2vh;
+`;
+
 const SignUpPage: React.FC = () => {
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
+
+    const handleSignUp = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (password !== confirmPassword) {
+            setError('Passwords do not match');
+            return;
+        }
+
+        try {
+            await registerUser({ username, email, password });
+            alert('Registration successful! You can now log in.');
+            navigate(`/${API_URLS.LOGIN}`);
+        } catch (error: any) {
+            console.error(error);
+            setError(error?.message || 'Error occurred during registration, please try again.');
+        }
+    };
+
     return (
         <SignUpPageContainer>
             <Header />
@@ -101,18 +134,48 @@ const SignUpPage: React.FC = () => {
             </SocialLoginContainer>
 
             <FormContainer>
-                <Form>
+                <Form onSubmit={handleSignUp}>
                     <Label htmlFor="username">Username:</Label>
-                    <Input id="username" type="text" placeholder="Your username" required />
+                    <Input
+                        id="username"
+                        type="text"
+                        placeholder="Your username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                    />
 
                     <Label htmlFor="email">Email Address:</Label>
-                    <Input id="email" type="email" placeholder="Your email address" required />
+                    <Input
+                        id="email"
+                        type="email"
+                        placeholder="Your email address"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
 
                     <Label htmlFor="password">Password:</Label>
-                    <Input id="password" type="password" placeholder="Your password" required />
+                    <Input
+                        id="password"
+                        type="password"
+                        placeholder="Your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
 
                     <Label htmlFor="confirmPassword">Repeat Password:</Label>
-                    <Input id="confirmPassword" type="password" placeholder="Repeat your password" required />
+                    <Input
+                        id="confirmPassword"
+                        type="password"
+                        placeholder="Repeat your password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                    />
+
+                    {error && <ErrorText>{error}</ErrorText>}
 
                     <SignUpButton type="submit">Create My Account</SignUpButton>
                 </Form>
