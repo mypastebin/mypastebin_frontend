@@ -1,4 +1,5 @@
 export interface Post {
+    id?: number;
     title: string;
     category: string;
     content: string;
@@ -33,7 +34,7 @@ export interface RegisterData extends Pick<User, 'username' | 'email' | 'passwor
 export interface LoginData extends Pick<User, 'username' | 'password'> {}
 
 export interface UserProfile extends Omit<User, 'password'> {
-    posts: Post[]; // Посты пользователя
+    posts: Post[];
 }
 
 export interface UpdateUserProfileData extends Partial<Pick<User, 'username' | 'email' | 'password'>> {}

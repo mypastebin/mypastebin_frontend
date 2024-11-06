@@ -23,7 +23,6 @@ export async function fetchUserProfile(token: string): Promise<UserProfile> {
 
     const headers = {
         'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
     };
 
     return getRequest<UserProfile>(apiUrl, headers);

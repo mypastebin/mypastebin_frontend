@@ -166,13 +166,6 @@ const MainPage: React.FC = () => {
             expirationDate
         };
 
-        const token = localStorage.getItem('token');
-        if (token) {
-            console.log('Authorization Header:', `Bearer ${JSON.parse(token)}`);
-        } else {
-            console.log('No Authorization Token Found');
-        }
-
         console.log('Submitting Post Data:', pasteData);
 
         try {

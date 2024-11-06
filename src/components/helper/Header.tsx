@@ -69,7 +69,7 @@ const UserIcon = styled(FaUserCircle)`
 const DropdownMenu = styled.div`
     position: absolute;
     top: 50px;
-    right: 20px;
+    right: 50px;
     background-color: #2C3E50;
     padding: 10px;
     border-radius: 5px;
@@ -110,10 +110,10 @@ const Header: React.FC = () => {
     };
 
     const handleLogout = () => {
-        // Удаляем токен из localStorage и перенаправляем на страницу логина
         localStorage.removeItem('token');
         setIsLoggedIn(false);
         navigate(`/${API_URLS.LOGIN}`);
+        console.log("Log out + token: " + localStorage.getItem('token'));
     };
 
     const handleProfileClick = () => {

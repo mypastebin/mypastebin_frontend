@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from './helper/Header.tsx';
 import { registerUser } from '../utils/userUtils';
-import {API_URLS} from "../constants/constants.ts"; // Импортируем функцию регистрации
+import {API_URLS} from "../constants/constants.ts";
 
 const SignUpPageContainer = styled.div`
     display: flex;
