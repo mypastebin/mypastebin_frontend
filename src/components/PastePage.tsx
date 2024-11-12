@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+// src/components/PastePage.tsx
+
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { fetchPost, incrementPostViews } from '../utils/postsUtils.ts';
-import Header from "./helper/Header.tsx";
-import {CustomScrollbar} from "../styled/styled.tsx";
+import Header from './helper/Header';
+import { CustomScrollbar } from '../styled/styled';
+import useFetchPost from '../hooks/useFetchPost';
 
 const PageContainer = styled.div`
     margin: 0;
@@ -36,7 +38,6 @@ const InfoContainer = styled.div`
     align-items: center;
     gap: 20px;
     margin-top: 10px;
-    
 `;
 
 const BaseText = styled.p`
@@ -45,7 +46,6 @@ const BaseText = styled.p`
     color: #BDC3C7;
     display: flex;
     align-items: center;
-    
 `;
 
 const PasteContent = styled.div`
@@ -78,58 +78,28 @@ const CopyButton = styled.button`
 
 const PastePage: React.FC = () => {
     const { hash } = useParams<{ hash: string }>();
-    const [pasteTitle, setPasteTitle] = useState('Loading...');
-    const [pasteCategory, setPasteCategory] = useState('');
-    const [pasteContent, setPasteContent] = useState('');
-    const [pasteViews, setPasteViews] = useState(0);
-    const [pasteExpirationDate, setPasteDate] = useState('');
-
-    useEffect(() => {
-        const fetchPasteData = async () => {
-            if (!hash) return;
-
-            const viewedKey = `viewed_${hash}`;
-            const hasViewed = localStorage.getItem(viewedKey);
-
-            try {
-                const data = await fetchPost(hash);
-                setPasteTitle(data.title);
-                setPasteCategory(data.category);
-                setPasteContent(data.content);
-                setPasteViews(data.views);
-                setPasteDate(new Date(data.expirationDate).toLocaleString());
-
-                if (!hasViewed) {
-                    await incrementPostViews(hash);
-                    setPasteViews((prevViews) => prevViews + 1);
-                    localStorage.setItem(viewedKey, 'true');
-                }
-            } catch (error) {
-                console.error('Error fetching post:', error);
-            }
-        };
-
-        fetchPasteData();
-    }, [hash]);
+    const { post, error } = useFetchPost(hash);
 
     const handleCopyLink = () => {
         navigator.clipboard.writeText(window.location.href);
         alert("Link copied to clipboard!");
     };
 
+    if (error) return <PageContainer>Error loading post</PageContainer>;
+
     return (
         <PageContainer>
             <Header />
             <TitleContainer>
-                <Title>{pasteTitle}</Title>
+                <Title>{post?.title || 'Loading...'}</Title>
                 <InfoContainer>
-                    <BaseText>Category: {pasteCategory}</BaseText>
-                    <BaseText>Views: {pasteViews}</BaseText>
-                    <BaseText>Expiration Date: {pasteExpirationDate}</BaseText>
+                    <BaseText>Category: {post?.category || 'Loading...'}</BaseText>
+                    <BaseText>Views: {post?.views || 0}</BaseText>
+                    <BaseText>Expiration Date: {post?.expirationDate || 'Loading...'}</BaseText>
                 </InfoContainer>
             </TitleContainer>
             <PasteContent>
-                {pasteContent}
+                {post?.content || 'Loading...'}
             </PasteContent>
             <CopyButton onClick={handleCopyLink}>Copy Link</CopyButton>
         </PageContainer>

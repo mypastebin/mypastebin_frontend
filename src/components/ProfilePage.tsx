@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+// src/components/ProfilePage.tsx
+
+import React from 'react';
 import styled from 'styled-components';
 import Header from './helper/Header.tsx';
-import { fetchUserProfile } from '../utils/userUtils';
-import { UserProfile } from '../constants/type';
+import useFetchProfile from '../hooks/useFetchProfile';
 
 const PageContainer = styled.div`
     display: flex;
@@ -58,31 +59,7 @@ const TableCell = styled.td`
 `;
 
 const ProfilePage: React.FC = () => {
-    const [profile, setProfile] = useState<UserProfile | null>(null);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        const loadProfile = async () => {
-            const token = JSON.parse(localStorage.getItem('token'));
-            console.log('Token from localStorage:', token);
-
-            if (!token) {
-                setError('User not authenticated');
-                return;
-            }
-
-            try {
-                const profileData = await fetchUserProfile(token);
-                console.log('Profile data received from server:', profileData);
-                setProfile(profileData);
-            } catch (error) {
-                console.error('Error fetching profile:', error);
-                setError('Could not load profile');
-            }
-        };
-
-        loadProfile();
-    }, []);
+    const { profile, error } = useFetchProfile();
 
     if (error) {
         return <div>{error}</div>;

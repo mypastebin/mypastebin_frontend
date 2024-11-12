@@ -4,6 +4,7 @@ export const API_URLS = {
     RECENT_POSTS: 'api/posts/recent',
     LOGIN: 'api/auth/login',
     SIGNUP: 'api/auth/signup',
+    GOOGLE_LOGIN: 'oauth2/authorization/google',
     PROFILE: 'api/profile'
 } as const;
 
@@ -13,4 +14,9 @@ export const CONST = {
 
 export const HEADERS = {
     'Content-Type': 'application/json',
+} as const;
+
+export const LOCAL_STORAGE_KEYS = {
+    EXPIRES: 'expires',
+    TOKEN: 'token',
 } as const;

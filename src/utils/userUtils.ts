@@ -1,29 +1,45 @@
 import { API_URLS } from '../constants/constants';
-import { getApiUrl, postRequest, getRequest } from './baseUtils';
-import {LoginData, RegisterData, UserProfile, UpdateUserProfileData, LoginResponse} from '../constants/type';
+import {getApiUrl, postRequest, getRequest, putRequest} from './basicUtils';
+import {
+    LoginData,
+    SignupData,
+    UserProfile,
+    UpdateUserProfileData,
+    LoginResponse,
+} from '../constants/type';
+import { storeAuthData } from './basicUtils';
 
 export async function loginUser(loginData: LoginData): Promise<LoginResponse> {
     const apiUrl = getApiUrl(API_URLS.LOGIN);
-    return postRequest<LoginResponse>(apiUrl, loginData);
+    const response = await postRequest<LoginResponse>(apiUrl, loginData);
+
+    if (response && response.token) {
+        let expires = '';
+        if (response.expiresIn) {
+            expires = new Date(Date.now() + response.expiresIn * 1000).toISOString();
+        } else {
+            expires = new Date(Date.now() + 3600 * 1000).toISOString(); // 1 hour
+        }
+
+        storeAuthData({ token: response.token, expires });
+    }
+
+    return response;
 }
 
-
-export async function registerUser(registerData: RegisterData): Promise<string> {
+export async function registerUser(signupData: SignupData): Promise<string> {
     const apiUrl = getApiUrl(API_URLS.SIGNUP);
-    return postRequest<string>(apiUrl, registerData);
+    return postRequest<string>(apiUrl, signupData);
 }
 
-export async function updateUserProfile(updateData: UpdateUserProfileData): Promise<UserProfile> {
+export async function updateUserProfile(
+    updateData: UpdateUserProfileData
+): Promise<UserProfile> {
     const apiUrl = getApiUrl(API_URLS.PROFILE);
-    return postRequest<UserProfile>(apiUrl, updateData);
+    return putRequest<UserProfile>(apiUrl, updateData);
 }
 
-export async function fetchUserProfile(token: string): Promise<UserProfile> {
+export async function fetchUserProfile(): Promise<UserProfile> {
     const apiUrl = getApiUrl(API_URLS.PROFILE);
-
-    const headers = {
-        'Authorization': `Bearer ${token}`,
-    };
-
-    return getRequest<UserProfile>(apiUrl, headers);
+    return getRequest<UserProfile>(apiUrl);
 }

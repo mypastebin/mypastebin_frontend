@@ -10,6 +10,20 @@ export interface Post {
     fileSize?: number;
 }
 
+export interface PostData {
+    title: string;
+    category: string;
+    content: string;
+    views: number;
+    expirationDate: string;
+}
+
+export interface AuthResponseData {
+    expires: string;
+    token: string;
+}
+
+// FIXME
 export interface CreatePostData extends Omit<Post, 'hash' | 'createdAt' | 'views'> {}
 
 export interface RecentPostsProps {
@@ -29,9 +43,17 @@ export interface User {
     views: number;
 }
 
-export interface RegisterData extends Pick<User, 'username' | 'email' | 'password'> {}
+export interface LoginData {
+    username: string;
+    password: string;
+}
 
-export interface LoginData extends Pick<User, 'username' | 'password'> {}
+export interface SignupData {
+    username: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+}
 
 export interface UserProfile extends Omit<User, 'password'> {
     posts: Post[];

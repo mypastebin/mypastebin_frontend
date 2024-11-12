@@ -1,5 +1,5 @@
 import {API_URLS} from "../constants/constants.ts";
-import {getApiUrl, getRequest, postRequest} from "./baseUtils.ts";
+import {getApiUrl, getRequest, postRequest} from "./basicUtils.ts";
 import {CreatePostData, Post} from "../constants/type.ts";
 
 

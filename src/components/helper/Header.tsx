@@ -87,8 +87,8 @@ const DropdownItem = styled.div`
 
 const Header: React.FC = () => {
     const navigate = useNavigate();
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // Состояние авторизации
-    const [showDropdown, setShowDropdown] = useState(false); // Для управления выпадающим меню
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [showDropdown, setShowDropdown] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');

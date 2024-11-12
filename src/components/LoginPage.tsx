@@ -1,9 +1,9 @@
+// src/components/LoginPage.tsx
+
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Header from "./helper/Header.tsx";
-import { useNavigate } from "react-router-dom";
-import { loginUser } from "../utils/userUtils.ts";
-import { API_URLS } from "../constants/constants.ts";
+import Header from "./helper/Header";
+import useLoginUser from "../hooks/useLoginUser";
 
 const LoginPageContainer = styled.div`
     display: flex;
@@ -102,33 +102,12 @@ const ErrorText = styled.p`
 const LoginPage: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const navigate = useNavigate();
+    const { handleLogin, handleGoogleLogin, error } = useLoginUser();
 
-    const handleLogin = async (e: React.FormEvent) => {
+    const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setError('');
-
-        try {
-            const response = await loginUser({ username, password });
-
-            console.log('Login response:', response);
-
-            localStorage.setItem('token', JSON.stringify(response.token));
-
-            alert('Login successful! Redirecting to your profile.');
-            navigate(`/${API_URLS.PROFILE}`);
-        } catch (error: unknown) {
-            console.error(error);
-
-            if (error instanceof Error) {
-                setError(error.message);
-            } else {
-                setError('Error occurred during login. Please try again.');
-            }
-        }
+        handleLogin({ username, password });
     };
-
 
     return (
         <LoginPageContainer>
@@ -136,11 +115,11 @@ const LoginPage: React.FC = () => {
             <Title>Login</Title>
 
             <SocialLoginContainer>
-                <SocialButton>Sign in with Google</SocialButton>
+                <SocialButton onClick={handleGoogleLogin}>Sign in with Google</SocialButton>
             </SocialLoginContainer>
 
             <FormContainer>
-                <Form onSubmit={handleLogin}>
+                <Form onSubmit={onSubmit}>
                     <Label htmlFor="username">Username:</Label>
                     <Input
                         id="username"

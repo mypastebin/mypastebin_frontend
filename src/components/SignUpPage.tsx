@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from './helper/Header.tsx';
-import { registerUser } from '../utils/userUtils';
-import {API_URLS} from "../constants/constants.ts";
+import useSignupUser from "../hooks/useSignupUser.ts";
 
 const SignUpPageContainer = styled.div`
     display: flex;
@@ -103,25 +101,12 @@ const SignUpPage: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [error, setError] = useState('');
-    const navigate = useNavigate();
 
-    const handleSignUp = async (e: React.FormEvent) => {
+    const { handleSignUp, handleGoogleSignUp, error } = useSignupUser();
+
+    const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-
-        if (password !== confirmPassword) {
-            setError('Passwords do not match');
-            return;
-        }
-
-        try {
-            await registerUser({ username, email, password });
-            alert('Registration successful! You can now log in.');
-            navigate(`/${API_URLS.LOGIN}`);
-        } catch (error: any) {
-            console.error(error);
-            setError(error?.message || 'Error occurred during registration, please try again.');
-        }
+        handleSignUp({ username, email, password, confirmPassword });
     };
 
     return (
@@ -130,11 +115,11 @@ const SignUpPage: React.FC = () => {
             <Title>Sign Up</Title>
 
             <SocialLoginContainer>
-                <SocialButton>Sign in with Google</SocialButton>
+                <SocialButton onClick={handleGoogleSignUp}>Sign in with Google</SocialButton>
             </SocialLoginContainer>
 
             <FormContainer>
-                <Form onSubmit={handleSignUp}>
+                <Form onSubmit={onSubmit}>
                     <Label htmlFor="username">Username:</Label>
                     <Input
                         id="username"

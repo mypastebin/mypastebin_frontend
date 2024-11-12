@@ -11,7 +11,7 @@ const PasteContainer = styled.div`
     box-shadow: 0 0 10px rgba(36, 52, 86, 0.5);
     display: flex;
     flex-direction: column;
-    margin-right: 20px; /* Отступ справа */
+    margin-right: 20px;
 `;
 
 const PasteHeader = styled.div`
