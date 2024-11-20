@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { API_URLS, CONST } from "../../constants/constants.ts";
+import { ROUTES } from "../../constants/constants.ts";
 import { FaUserCircle } from 'react-icons/fa';
 
 const HeaderContainer = styled.header`
@@ -98,26 +98,26 @@ const Header: React.FC = () => {
     }, []);
 
     const handleLogoClick = () => {
-        navigate(CONST.BASE_NET);
+        navigate(ROUTES.BASE_NET);
     };
 
     const handleLoginClick = () => {
-        navigate(`/${API_URLS.LOGIN}`);
+        navigate(ROUTES.LOGIN);
     };
 
     const handleSignUpClick = () => {
-        navigate(`/${API_URLS.SIGNUP}`);
+        navigate(ROUTES.SIGNUP);
     };
 
     const handleLogout = () => {
         localStorage.removeItem('token');
         setIsLoggedIn(false);
-        navigate(`/${API_URLS.LOGIN}`);
+        navigate(ROUTES.LOGIN);
         console.log("Log out + token: " + localStorage.getItem('token'));
     };
 
     const handleProfileClick = () => {
-        navigate(`/${API_URLS.PROFILE}`);
+        navigate(ROUTES.PROFILE);
     };
 
     return (

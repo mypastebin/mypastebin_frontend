@@ -8,8 +8,12 @@ export const API_URLS = {
     PROFILE: 'api/profile'
 } as const;
 
-export const CONST = {
+export const ROUTES = {
     BASE_NET: '/',
+    LOGIN: '/login',
+    SIGNUP: '/signup',
+    PROFILE: '/profile',
+    OAUTH2_REDIRECT: '/oauth2/redirect'
 } as const;
 
 export const HEADERS = {

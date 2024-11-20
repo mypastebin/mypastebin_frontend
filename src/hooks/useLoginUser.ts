@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../utils/userUtils';
-import { API_URLS } from '../constants/constants';
+import {API_URLS, ROUTES} from '../constants/constants';
 import { LoginData } from "../constants/type";
 import { getAuthHeaders } from '../utils/basicUtils';
 
@@ -18,7 +18,7 @@ const useLoginUser = () => {
             console.log('HEADER: ', getAuthHeaders());
 
             alert('Login successful! Redirecting to your profile.');
-            navigate(`/${API_URLS.PROFILE}`);
+            navigate(ROUTES.PROFILE);
         } catch (error: unknown) {
             console.error('Login error:', error);
             if (error instanceof Error) {
