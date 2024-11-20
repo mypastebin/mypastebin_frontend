@@ -1,9 +1,10 @@
-// src/components/ProfilePage.tsx
-
 import React from 'react';
 import styled from 'styled-components';
 import Header from './helper/Header.tsx';
 import useFetchProfile from '../hooks/useFetchProfile';
+import { FaRegUserCircle, FaExternalLinkAlt  } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import {ROUTES} from "../constants/constants.ts";
 
 const PageContainer = styled.div`
     display: flex;
@@ -33,6 +34,13 @@ const Username = styled.h1`
     color: #ECF0F1;
 `;
 
+const UserIcon = styled(FaRegUserCircle)`
+    width: 2em;
+    height: 2em;
+    margin-right: 1rem;
+    color: #0f508f;
+`;
+
 const PostsTable = styled.table`
     width: 80%;
     margin-top: 2rem;
@@ -58,8 +66,19 @@ const TableCell = styled.td`
     text-align: center;
 `;
 
+const ExternalLinkButton = styled(FaExternalLinkAlt)`
+    cursor: pointer;
+    color: #ECF0F1;
+    font-size: 1.5em;
+
+    &:hover {
+        color: #61DAFB;
+    }
+`;
+
 const ProfilePage: React.FC = () => {
     const { profile, error } = useFetchProfile();
+    const navigate = useNavigate();
 
     if (error) {
         return <div>{error}</div>;
@@ -69,10 +88,15 @@ const ProfilePage: React.FC = () => {
         return <div>Loading...</div>;
     }
 
+    const handleNavigate = (hash: string) => {
+        navigate(`${ROUTES.POST}/${hash}`);
+    };
+
     return (
         <PageContainer>
             <Header />
             <HeaderContainer>
+                <UserIcon />
                 <Username>{profile.username}</Username>
             </HeaderContainer>
 
@@ -91,7 +115,12 @@ const ProfilePage: React.FC = () => {
                         <TableRow key={post.id}>
                             <TableCell>{post.id}</TableCell>
                             <TableCell>{post.title}</TableCell>
-                            <TableCell>{post.content}</TableCell>
+                            <TableCell>
+                                <ExternalLinkButton
+                                    aria-label="View Post"
+                                    onClick={() => handleNavigate(post.hash)}
+                                />
+                            </TableCell>
                             <TableCell>{new Date(post.createdAt).toLocaleDateString()}</TableCell>
                         </TableRow>
                     ))}

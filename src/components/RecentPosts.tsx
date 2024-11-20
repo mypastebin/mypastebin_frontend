@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { RecentPostsProps } from '../constants/type.ts';
 import { CustomScrollbar } from "../styled/styled.tsx";
 import { format } from 'date-fns';
-import { API_URLS } from '../constants/constants.ts';
+import { ROUTES } from '../constants/constants.ts';
 
 const PostsContainer = styled.div`
     width: 25%;
@@ -73,7 +73,7 @@ const RecentPosts: React.FC<RecentPostsProps> = ({ posts }) => {
                 {posts.map((post) => {
                     return (
                         <Link
-                            to={`${API_URLS.POST}/${post.hash}`}
+                            to={`${ROUTES.POST}/${post.hash}`}
                             key={post.hash}
                             style={{ textDecoration: 'none' }}
                         >

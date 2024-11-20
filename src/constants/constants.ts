@@ -13,6 +13,7 @@ export const ROUTES = {
     LOGIN: '/login',
     SIGNUP: '/signup',
     PROFILE: '/profile',
+    POST: '/posts',
     OAUTH2_REDIRECT: '/oauth2/redirect'
 } as const;
 
